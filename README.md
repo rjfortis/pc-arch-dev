@@ -29,6 +29,7 @@ git clone https://github.com/rjfortis/pc-arch-dev.git
 
 # REMOTE
 ssh-keygen -R <IP>
+ssh user@<newIP>
 ```
 
 ---
