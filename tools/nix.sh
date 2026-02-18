@@ -40,17 +40,17 @@ cat <<EOF >"$NIXPKGS_CONFIG_FILE"
 EOF
 
 # Ensure Nix environment is loaded in bash
-NIX_PROFILE_LINE='[ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ] && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+#NIX_PROFILE_LINE='[ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ] && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 
-if ! grep -qF "$NIX_PROFILE_LINE" "$HOME/.bashrc"; then
-  echo "$NIX_PROFILE_LINE" >>"$HOME/.bashrc"
-fi
+#if ! grep -qF "$NIX_PROFILE_LINE" "$HOME/.bashrc"; then
+#  echo "$NIX_PROFILE_LINE" >>"$HOME/.bashrc"
+#fi
 
 # Apply changes to the current session
 export NIX_REMOTE=daemon
-if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
-  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-fi
+#if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+#  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+#fi
 
 echo ""
 echo "Nix installation completed successfully."
