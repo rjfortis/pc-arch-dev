@@ -70,7 +70,7 @@ sudo systemctl enable bluetooth
 # --------------------------------------------------------
 log "Installing network and power applets"
 
-sudo pacman -S --needed --noconfirm nm-applet upower
+sudo pacman -S --needed --noconfirm network-manager-applet upower
 
 # --------------------------------------------------------
 # 06. Laptop Specific Tools
@@ -136,4 +136,3 @@ echo ""
 echo "--------------------------------------------------------"
 echo "DESKTOP SETUP COMPLETE!"
 echo "--------------------------------------------------------"
-
