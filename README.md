@@ -11,6 +11,22 @@ This repository is designed for **clean installs** and personal environment rebu
 
 ---
 
+## Enter to the new pc using SSH
+
+```
+passwd
+
+ip a
+
+ssh root@<IP>
+
+pacman -Sy git
+
+git clone https://github.com/rjfortis/pc-arch-dev.git
+```
+
+---
+
 ## ⚠️ WARNING
 
 `01_format-disk.sh` **will erase the selected disk.**

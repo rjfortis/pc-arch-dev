@@ -55,7 +55,7 @@ PACKAGES=(
     nano
     sudo
     git
-    gh
+    github-cli
     openssh
     networkmanager
     xfsprogs
