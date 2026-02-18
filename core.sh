@@ -87,7 +87,7 @@ log "Installing essential and development tools"
 
 sudo pacman -S --needed --noconfirm \
     base-devel bash-completion git curl wget github-cli rsync zip unzip xdg-utils xdg-user-dirs \
-    xclip dbus htop ca-certificates openssl usbutils dmidecode pciutils \
+    xclip dbus htop ca-certificates openssl usbutils dmidecode pciutils libyaml libffi zlib readline \
     direnv ripgrep helix jq tmux zellij
 
 # --------------------------------------------------------

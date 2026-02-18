@@ -40,7 +40,8 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # Floating rule for Audio Control GUI
-for_window [class="Pavucontrol"] floating enable, resize set 600 400, move position center
+#for_window [class="Pavucontrol"] floating enable, resize set 600 400, move position center
+for_window [class="pavucontrol"] floating enable, resize set 600 400, move position center
 
 # --- Brightness Control (DISABLED - Laptop Specific) ---
 # bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
