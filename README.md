@@ -13,16 +13,22 @@ This repository is designed for **clean installs** and personal environment rebu
 
 ## Enter to the new pc using SSH
 
-```
+```bash
+# NEWHOST
 passwd
 
 ip a
 
+# REMOTE
 ssh root@<IP>
 
+# NEWHOST
 pacman -Sy git
 
 git clone https://github.com/rjfortis/pc-arch-dev.git
+
+# REMOTE
+ssh-keygen -R <IP>
 ```
 
 ---
