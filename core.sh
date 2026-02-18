@@ -86,7 +86,7 @@ fi
 log "Installing essential and development tools"
 
 sudo pacman -S --needed --noconfirm \
-    base-devel git curl wget github-cli rsync zip unzip xdg-utils xdg-user-dirs \
+    base-devel bash-completion git curl wget github-cli rsync zip unzip xdg-utils xdg-user-dirs \
     xclip dbus htop ca-certificates openssl usbutils dmidecode pciutils \
     direnv ripgrep helix jq tmux zellij
 
@@ -107,7 +107,7 @@ log "Installing fonts"
 
 sudo pacman -S --needed --noconfirm \
     ttf-liberation ttf-dejavu ttf-jetbrains-mono ttf-jetbrains-mono-nerd \
-    ttf-font-awesome
+    ttf-font-awesome noto-fonts noto-fonts-emoji noto-fonts-cjk
 
 # --------------------------------------------------------
 # 10. Setup XDG Directories
