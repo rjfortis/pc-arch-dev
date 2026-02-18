@@ -55,7 +55,10 @@ link_file() {
 # --------------------------------------------------------
 
 # Shell
-#link_file "config/bashrc" ".bashrc"
+link_file "config/bashrc" ".bashrc"
+
+# xinit
+link_file "config/xinitrc" ".xinitrc"
 
 # Window Manager & Status
 link_file "config/i3/config" ".config/i3/config"

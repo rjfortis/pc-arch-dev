@@ -170,6 +170,14 @@ Configures:
 
 ---
 
+## Reboot
+
+```bash
+sudo reboot
+```
+
+---
+
 # Design Principles
 
 * Modular scripts

@@ -12,6 +12,9 @@ focus_follows_mouse yes
 # PolicyKit for USB mounting & Admin privileges
 exec --no-startup-id /usr/bin/lxqt-policykit-agent
 
+# PICOM
+exec --no-startup-id picom -b
+
 # Screen lock management (Simplified for Desktop)
 # Removed --transfer-sleep-lock as it is laptop-specific
 bindsym $mod+Shift+x exec --no-startup-id i3lock -c 000000
