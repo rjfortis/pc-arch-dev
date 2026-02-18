@@ -165,5 +165,5 @@ echo "Remove installation media and reboot."
 echo "--------------------------------------------------------"
 
 umount -R /mnt
-sleep 3
-# poweroff # Commented out for safety; uncomment if you want auto-shutdown
+sleep 5
+poweroff # Commented out for safety; uncomment if you want auto-shutdown
