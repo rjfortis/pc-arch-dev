@@ -1,0 +1,60 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# http://i3wm.org/i3status/
+
+general {
+    colors = true
+    interval = 5
+    color_good = "#2AA198"
+    color_bad = "#586E75"
+    color_degraded = "#CB4B16"
+}
+
+# Order of displayed modules
+order += "disk /"
+order += "wireless _first_"
+order += "battery all"
+order += "load"
+order += "memory"
+order += "tztime local"
+
+# --- Wireless Settings ---
+# Displays SSID and quality percentage
+wireless _first_ {
+    format_up = " (%quality at %essid) %ip"
+    format_down = " down"
+}
+
+# --- Battery Settings ---
+# Crucial for laptops. Displays percentage and remaining time.
+battery all {
+    format = "%status %percentage %remaining"
+    format_down = "No battery"
+    last_full_capacity = true
+    integer_battery_capacity = true
+    low_threshold = 15
+    threshold_type = percentage
+}
+
+# --- Storage Settings ---
+disk "/" {
+    format = " %avail"
+}
+
+# --- System Load ---
+load {
+    format = " %1min"
+}
+
+# --- RAM Usage ---
+memory {
+    format = "RAM %used - %available"
+    threshold_degraded = "1G"
+    format_degraded = "MEMORY LOW: %free"
+}
+
+# --- Clock ---
+tztime local {
+    format = " %Y-%m-%d %H:%M:%S"
+}
