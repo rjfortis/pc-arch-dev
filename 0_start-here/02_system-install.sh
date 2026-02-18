@@ -19,12 +19,12 @@ done
 # -----------------------------
 echo "Checking internet connectivity..."
 if ! ping -c 1 -W 2 archlinux.org >/dev/null 2>&1; then
-    echo "Error: No internet connection detected. pacstrap requires network access."
+    echo "Error: No internet connection detected."
     exit 1
 fi
 
 # -----------------------------
-# 02. CPU Vendor Detection (Improved)
+# 02. CPU Vendor Detection
 # -----------------------------
 CPU_VENDOR=$(awk -F: '/vendor_id/ {print $2; exit}' /proc/cpuinfo | xargs 2>/dev/null || true)
 
@@ -46,7 +46,7 @@ read -s -p "Enter password for both root and $MY_USER: " MY_PASSWORD
 echo ""
 
 # -----------------------------
-# 04. Base Installation (Package Array)
+# 04. Base Installation
 # -----------------------------
 PACKAGES=(
     base
@@ -73,16 +73,25 @@ echo "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # -----------------------------
-# 06. Chroot Configuration
+# 06. Resolve ROOT UUID (OUTSIDE chroot)
 # -----------------------------
-echo "Entering Chroot for system configuration..."
+ROOT_UUID=$(blkid -s UUID -o value /dev/disk/by-partlabel/SYSTEM)
 
-arch-chroot /mnt <<EOF
+if [ -z "$ROOT_UUID" ]; then
+    echo "Error: Could not resolve ROOT UUID."
+    exit 1
+fi
 
+# -----------------------------
+# 07. Chroot Configuration
+# -----------------------------
+echo "Entering chroot..."
+
+arch-chroot /mnt /bin/bash -c "
 set -euo pipefail
 
 # -----------------------------
-# Localization (Avoid duplication)
+# Localization
 # -----------------------------
 ln -sf /usr/share/zoneinfo/America/El_Salvador /etc/localtime
 hwclock --systohc
@@ -96,12 +105,12 @@ if ! grep -q "^en_US.UTF-8 UTF-8" /etc/locale.gen; then
 fi
 
 locale-gen
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 
 # -----------------------------
-# Network configuration
+# Network
 # -----------------------------
-echo "$MY_HOSTNAME" > /etc/hostname
+echo '$MY_HOSTNAME' > /etc/hostname
 
 cat <<EOT > /etc/hosts
 127.0.0.1   localhost
@@ -110,23 +119,23 @@ cat <<EOT > /etc/hosts
 EOT
 
 # -----------------------------
-# Users and Permissions
+# Users
 # -----------------------------
-echo "root:$MY_PASSWORD" | chpasswd
-useradd -m -G wheel "$MY_USER"
-echo "$MY_USER:$MY_PASSWORD" | chpasswd
+echo 'root:$MY_PASSWORD' | chpasswd
+useradd -m -G wheel '$MY_USER'
+echo '$MY_USER:$MY_PASSWORD' | chpasswd
 
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # -----------------------------
-# Enable services
+# Services
 # -----------------------------
 systemctl enable sshd
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 
 # -----------------------------
-# Bootloader Setup (systemd-boot)
+# Bootloader (systemd-boot)
 # -----------------------------
 bootctl install
 
@@ -137,46 +146,29 @@ editor no
 console-mode auto
 EOT
 
-# -----------------------------
-# Resolve ROOT UUID Safely
-# -----------------------------
-ROOT_UUID=\$(blkid -s UUID -o value -L SYSTEM || true)
-
-if [ -z "\$ROOT_UUID" ]; then
-    echo "Error: Could not find partition labeled SYSTEM."
-    exit 1
-fi
-
 cat <<EOT > /boot/loader/entries/arch.conf
 title   Arch Linux
 linux   /vmlinuz-linux
 $( [[ -n "$UCODE_PACKAGE" ]] && echo "initrd  /$UCODE_PACKAGE.img" )
 initrd  /initramfs-linux.img
-options root=UUID=\$ROOT_UUID rw audit=0 acpi_backlight=vendor splash quiet
+options root=UUID=$ROOT_UUID rw audit=0 acpi_backlight=vendor quiet
 EOT
 
 # -----------------------------
 # Regenerate Initramfs
 # -----------------------------
-cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.orig
-
 sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block filesystems fsck)/' /etc/mkinitcpio.conf
-
 mkinitcpio -P
-
-EOF
+"
 
 # -----------------------------
-# 07. Final Message & Shutdown
+# 08. Final Message
 # -----------------------------
 echo "--------------------------------------------------------"
 echo "INSTALLATION FINISHED SUCCESSFULLY!"
-echo "Please REMOVE the USB installation media NOW."
+echo "Remove installation media."
 echo "--------------------------------------------------------"
 
-echo "Unmounting partitions..."
 umount -R /mnt
-
-echo "Shutting down in 5 seconds..."
-sleep 5
+sleep 3
 poweroff
