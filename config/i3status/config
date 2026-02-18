@@ -1,7 +1,5 @@
-# i3status configuration file.
+# i3status configuration file (Desktop Optimized)
 # see "man i3status" for documentation.
-
-# http://i3wm.org/i3status/
 
 general {
     colors = true
@@ -13,28 +11,22 @@ general {
 
 # Order of displayed modules
 order += "disk /"
+order += "ethernet _first_"
 order += "wireless _first_"
-order += "battery all"
 order += "load"
 order += "memory"
 order += "tztime local"
 
-# --- Wireless Settings ---
-# Displays SSID and quality percentage
-wireless _first_ {
-    format_up = " (%quality at %essid) %ip"
+# --- Ethernet Settings (Primary for Desktops) ---
+ethernet _first_ {
+    format_up = " %ip"
     format_down = " down"
 }
 
-# --- Battery Settings ---
-# Crucial for laptops. Displays percentage and remaining time.
-battery all {
-    format = "%status %percentage %remaining"
-    format_down = "No battery"
-    last_full_capacity = true
-    integer_battery_capacity = true
-    low_threshold = 15
-    threshold_type = percentage
+# --- Wireless Settings ---
+wireless _first_ {
+    format_up = " (%quality at %essid) %ip"
+    format_down = "" # Empty if not connected to avoid clutter
 }
 
 # --- Storage Settings ---
@@ -49,7 +41,7 @@ load {
 
 # --- RAM Usage ---
 memory {
-    format = "RAM %used - %available"
+    format = "RAM %used"
     threshold_degraded = "1G"
     format_degraded = "MEMORY LOW: %free"
 }
@@ -58,3 +50,8 @@ memory {
 tztime local {
     format = " %Y-%m-%d %H:%M:%S"
 }
+
+# --- Battery Settings (DISABLED - Laptop Specific) ---
+# battery all {
+#    format = "%status %percentage %remaining"
+# }

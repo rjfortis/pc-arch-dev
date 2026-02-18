@@ -1,56 +1,57 @@
-# --- i3wm Config for Dell Inspiron (AMD) ---
+# --- i3wm Config (Desktop Optimized) ---
 # Mod key (Mod4 = Windows key)
 set $mod Mod4
 
 # --- Fonts ---
-# Using Ubuntu fonts and FontAwesome for icons
-font pango:Ubuntu Regular 10
+font pango:JetBrainsMono Nerd Font 10
 
-# --- Mouse & Touchpad Settings ---
-# Floating windows follow mouse
+# --- Mouse Settings ---
 focus_follows_mouse yes
 
 # --- Essential Executions (Autostart) ---
 # PolicyKit for USB mounting & Admin privileges
 exec --no-startup-id /usr/bin/lxqt-policykit-agent
-# Screen lock management
-exec --no-startup-id xss-lock -- transfer-sleep-lock -- i3lock --nofork
+
+# Screen lock management (Simplified for Desktop)
+# Removed --transfer-sleep-lock as it is laptop-specific
+bindsym $mod+Shift+x exec --no-startup-id i3lock -c 000000
+
 # Notification Daemon
 exec --no-startup-id dunst
-# Network Manager Applet (from your previous install)
+
+# Network Manager Applet (Ensuring icons work)
 exec --no-startup-id nm-applet
-# Redshift for eye protection
+
+# Redshift for eye protection (Color temperature only)
 exec --no-startup-id redshift -x && redshift -O 4500
 
 # --- Keybindings (Apps) ---
 bindsym $mod+Return exec alacritty
 bindsym $mod+d exec rofi -show drun -show-icons
-#bindsym $mod+e exec pcmanfm
 bindsym $mod+Shift+q kill
 
-# --- Audio Control ---
+# --- Audio Control (PulseAudio/Pipewire) ---
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
+# Floating rule for Audio Control GUI
 for_window [class="Pavucontrol"] floating enable, resize set 600 400, move position center
 
-# Brightness Control (brightnessctl)
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+# --- Brightness Control (DISABLED - Laptop Specific) ---
+# bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+# bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 
 # Screenshot (Flameshot)
 bindsym Print exec --no-startup-id flameshot gui
 
-# --- Navigation ---
-# Change focus (Vim style)
+# --- Navigation (Vim style) ---
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# Move focused window
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
@@ -58,8 +59,6 @@ bindsym $mod+Shift+l move right
 
 # --- Layout Toggle ---
 bindsym $mod+f fullscreen toggle
-#bindsym $mod+s layout stacking
-#bindsym $mod+w layout tabbed
 bindsym $mod+v split v
 bindsym $mod+b split h
 bindsym $mod+Shift+space floating toggle
@@ -86,12 +85,11 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
 
-# --- Appearance (No Compositor Style) ---
-# High contrast borders for visibility without shadows
+# --- Appearance ---
 default_border pixel 2
 default_floating_border normal 2
 
-# Arc-Dark Color Palette for i3
+# Arc-Dark Color Palette
 # class                 border  backgr. text    indicator child_border
 client.focused          #5294e2 #5294e2 #ffffff #5294e2   #5294e2
 client.focused_inactive #383c4a #383c4a #afb8c5 #4b5162   #383c4a
@@ -109,6 +107,7 @@ bar {
     }
 }
 
+# --- Modes ---
 # Exit Menu
 set $mode_system System (l) logout, (r) reboot, (s) shutdown
 mode "$mode_system" {
@@ -120,12 +119,8 @@ mode "$mode_system" {
 }
 bindsym $mod+0 mode "$mode_system"
 
+# Resize Menu
 mode "resize" {
-    bindsym Left  resize shrink width 10 px or 10 ppt
-    bindsym Down  resize grow height 10 px or 10 ppt
-    bindsym Up    resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
-
     bindsym h resize shrink width 10 px or 10 ppt
     bindsym j resize grow height 10 px or 10 ppt
     bindsym k resize shrink height 10 px or 10 ppt
@@ -133,7 +128,5 @@ mode "resize" {
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
 }
-
 bindsym $mod+r mode "resize"
