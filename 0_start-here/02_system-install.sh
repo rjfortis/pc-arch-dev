@@ -75,10 +75,11 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # -----------------------------
 # 06. Resolve ROOT UUID (OUTSIDE chroot)
 # -----------------------------
-ROOT_UUID=$(blkid -s UUID -o value /dev/disk/by-partlabel/SYSTEM)
+# Note: Ensure the partition label 'SYSTEM' exists
+ROOT_UUID=$(blkid -s UUID -o value /dev/disk/by-partlabel/SYSTEM || true)
 
 if [ -z "$ROOT_UUID" ]; then
-    echo "Error: Could not resolve ROOT UUID."
+    echo "Error: Could not resolve ROOT UUID for partlabel 'SYSTEM'."
     exit 1
 fi
 
@@ -87,30 +88,30 @@ fi
 # -----------------------------
 echo "Entering chroot..."
 
-arch-chroot /mnt /bin/bash -c "
+# Using Heredoc to pass the entire configuration block to the chroot environment
+arch-chroot /mnt /bin/bash <<EOF
 set -euo pipefail
 
-# -----------------------------
-# Localization
-# -----------------------------
+# --- Localization ---
 ln -sf /usr/share/zoneinfo/America/El_Salvador /etc/localtime
 hwclock --systohc
 
-# Uncomment if commented
+# Uncomment locale
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 
-# Append only if missing
+# Append if missing
 if ! grep -q "^en_US.UTF-8 UTF-8" /etc/locale.gen; then
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 fi
 
 locale-gen
-echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
-# -----------------------------
-# Network
-# -----------------------------
-echo '$MY_HOSTNAME' > /etc/hostname
+# Fix: Create vconsole.conf to satisfy mkinitcpio hooks
+echo "KEYMAP=us" > /etc/vconsole.conf
+
+# --- Network ---
+echo "$MY_HOSTNAME" > /etc/hostname
 
 cat <<EOT > /etc/hosts
 127.0.0.1   localhost
@@ -118,25 +119,20 @@ cat <<EOT > /etc/hosts
 127.0.1.1   $MY_HOSTNAME.localdomain   $MY_HOSTNAME
 EOT
 
-# -----------------------------
-# Users
-# -----------------------------
-echo 'root:$MY_PASSWORD' | chpasswd
-useradd -m -G wheel '$MY_USER'
-echo '$MY_USER:$MY_PASSWORD' | chpasswd
+# --- Users ---
+echo "root:$MY_PASSWORD" | chpasswd
+useradd -m -G wheel "$MY_USER"
+echo "$MY_USER:$MY_PASSWORD" | chpasswd
 
+# Enable sudo for wheel group
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-# -----------------------------
-# Services
-# -----------------------------
+# --- Services ---
 systemctl enable sshd
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 
-# -----------------------------
-# Bootloader (systemd-boot)
-# -----------------------------
+# --- Bootloader (systemd-boot) ---
 bootctl install
 
 cat <<EOT > /boot/loader/loader.conf
@@ -154,21 +150,20 @@ initrd  /initramfs-linux.img
 options root=UUID=$ROOT_UUID rw audit=0 acpi_backlight=vendor quiet
 EOT
 
-# -----------------------------
-# Regenerate Initramfs
-# -----------------------------
+# --- Regenerate Initramfs ---
+# Ensure mkinitcpio.conf uses the correct hooks for the installed system
 sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect modconf kms keyboard keymap consolefont block filesystems fsck)/' /etc/mkinitcpio.conf
 mkinitcpio -P
-"
+EOF
 
 # -----------------------------
 # 08. Final Message
 # -----------------------------
 echo "--------------------------------------------------------"
 echo "INSTALLATION FINISHED SUCCESSFULLY!"
-echo "Remove installation media."
+echo "Remove installation media and reboot."
 echo "--------------------------------------------------------"
 
 umount -R /mnt
 sleep 3
-poweroff
+# poweroff # Commented out for safety; uncomment if you want auto-shutdown
