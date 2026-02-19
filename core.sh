@@ -132,6 +132,12 @@ else
     echo "Paru already installed"
 fi
 
+# --------------------------------------------------------
+# 11. Voice to Text (rust)
+# --------------------------------------------------------
+
+sudo pacman -S --needed --noconfirm webkit2gtk-4.1 clang llvm pkgconf alsa-lib libx11 libxtst libxkbcommon
+
 echo ""
 echo "--------------------------------------------------------"
 echo "DESKTOP SETUP COMPLETE!"
