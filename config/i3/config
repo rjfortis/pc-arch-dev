@@ -15,6 +15,10 @@ exec --no-startup-id /usr/bin/lxqt-policykit-agent
 # PICOM
 exec --no-startup-id picom -b
 
+# variables D-Bus/Systemd & xdg-portal
+exec --no-startup-id dbus-update-activation-environment --all
+exec --no-startup-id /usr/lib/xdg-desktop-portal-gtk &
+
 # Screen lock management (Simplified for Desktop)
 # Removed --transfer-sleep-lock as it is laptop-specific
 bindsym $mod+Shift+x exec --no-startup-id i3lock -c 000000

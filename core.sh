@@ -40,7 +40,7 @@ if echo "$GPU_INFO" | grep -qi "NVIDIA"; then
 elif echo "$GPU_INFO" | grep -qi "AMD"; then
     echo "AMD GPU detected"
     sudo pacman -S --needed --noconfirm \
-        xf86-video-amdgpu mesa mesa-utils vulkan-radeon vulkan-icd-loader libva-mesa-driver
+        xf86-video-amdgpu mesa mesa-utils vulkan-radeon vulkan-icd-loader libva-mesa-driver vulkan-tools
 elif echo "$GPU_INFO" | grep -qi "Intel"; then
     echo "Intel GPU detected"
     sudo pacman -S --needed --noconfirm mesa vulkan-intel intel-media-driver
@@ -88,7 +88,7 @@ log "Installing essential and development tools"
 sudo pacman -S --needed --noconfirm \
     base-devel bash-completion git curl wget github-cli rsync zip unzip xdg-utils xdg-user-dirs \
     xclip dbus htop ca-certificates openssl usbutils dmidecode pciutils libyaml libffi zlib readline \
-    direnv ripgrep helix jq tmux zellij
+    direnv ripgrep helix jq tmux zellij xdg-desktop-portal xdg-desktop-portal-gtk
 
 # --------------------------------------------------------
 # 08. Xorg and i3 Window Manager

@@ -12,4 +12,5 @@ fi
 [ -f ~/.Xresources ] && xrdb -merge ~/.Xresources
 
 # Start i3
-exec i3
+# exec i3
+exec dbus-run-session i3
