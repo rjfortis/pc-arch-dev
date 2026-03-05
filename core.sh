@@ -138,6 +138,12 @@ fi
 
 sudo pacman -S --needed --noconfirm webkit2gtk-4.1 clang llvm pkgconf alsa-lib libx11 libxtst libxkbcommon
 
+
+# NTFS disks - win support
+
+sudo pacman -S --needed --noconfirm udisks2 gvfs gvfs-mtp ntfs-3g exfatprogs dosfstools
+
+
 echo ""
 echo "--------------------------------------------------------"
 echo "DESKTOP SETUP COMPLETE!"
