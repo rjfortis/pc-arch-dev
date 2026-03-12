@@ -136,13 +136,20 @@ fi
 # 11. Voice to Text (rust)
 # --------------------------------------------------------
 
-sudo pacman -S --needed --noconfirm webkit2gtk-4.1 clang llvm pkgconf alsa-lib libx11 libxtst libxkbcommon
+# cmake
+
+sudo pacman -S --needed --noconfirm webkit2gtk-4.1 clang llvm pkgconf alsa-lib libx11 libxtst libxkbcommon cmake 
 
 
 # NTFS disks - win support
 
 sudo pacman -S --needed --noconfirm udisks2 gvfs gvfs-mtp ntfs-3g exfatprogs dosfstools
 
+# mp3 reproductor
+sudo pacman -S sox
+
+# git
+sudo pacman -S less
 
 echo ""
 echo "--------------------------------------------------------"
